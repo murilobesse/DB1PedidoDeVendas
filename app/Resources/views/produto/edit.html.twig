@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Erro: </strong> {{ message }}
+        </div>
+    {% endfor %}
+    <h1>Editar Produto</h1>
+
+    {{ form_start(edit_form) }}
+        {{ form_widget(edit_form) }}
+        <input class="btn btn-success" type="submit" value="Salvar" />
+    {{ form_end(edit_form) }}
+
+    <br>
+    <a class="btn btn-info" href="{{ path('produto_index') }}">Voltar</a>
+
+    <br><br>
+    {{ form_start(delete_form) }}
+        <input class="btn btn-danger" type="submit" value="Excluir">
+    {{ form_end(delete_form) }}
+
+{% endblock %}

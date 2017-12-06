@@ -1,0 +1,175 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        .ui-autocomplete {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            float: left;
+            display: none;
+            min-width: 160px;
+            padding: 4px 0;
+            margin: 0 0 10px 25px;
+            list-style: none;
+            background-color: #ffffff;
+            border-color: #ccc;
+            border-color: rgba(0, 0, 0, 0.2);
+            border-style: solid;
+            border-width: 1px;
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            -webkit-background-clip: padding-box;
+            -moz-background-clip: padding;
+            background-clip: padding-box;
+            *border-right-width: 2px;
+            *border-bottom-width: 2px;
+        }
+
+        .ui-menu-item > a.ui-corner-all {
+            display: block;
+            padding: 3px 15px;
+            clear: both;
+            font-weight: normal;
+            line-height: 18px;
+            color: #555555;
+            white-space: nowrap;
+            text-decoration: none;
+        }
+
+        .ui-state-hover, .ui-state-active {
+            color: #ffffff;
+            text-decoration: none;
+            background-color: #0088cc;
+            border-radius: 0px;
+            -webkit-border-radius: 0px;
+            -moz-border-radius: 0px;
+            background-image: none;
+        }
+        .ui-helper-hidden-accessible {
+            display:none;
+        }
+        .ui-state-focus
+        {
+            color:White;
+            background:cornflowerblue;
+            outline:none;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Erro: </strong> {{ message }}
+        </div>
+    {% endfor %}
+
+    <h1>Pedido ID: {{ idPedido }}</h1>
+
+    {{ form_start(newProdutoForm) }}
+
+    <div class="row">
+        <div style="display:none;" >
+            {{ form_row(newProdutoForm.pedidoId, {'value' : idPedido|number_format}) }}
+        </div>
+        <div style="display:none;">
+            {{ form_row(newProdutoForm.produtoId) }}
+        </div>
+        <div class="col-sm-4">
+            <div class="form-group">
+                <label class="control-label required" for="vendabundle_itempedido_nomeProduto">Produto</label>
+                <input type="text" id="vendabundle_itempedido_nomeProduto" name="vendabundle_itempedido[nomeProduto]" class="form-control" placeholder="Nome Produto"/>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            {{ form_row(newProdutoForm.quantidade) }}
+        </div>
+        <div class="col-sm-2">
+            {{ form_row(newProdutoForm.precoUnitario) }}
+        </div>
+        <div class="col-sm-2">
+            {{ form_row(newProdutoForm.percentualDesconto) }}
+        </div>
+        <div class="col-sm-2">
+            {{ form_row(newProdutoForm.total) }}
+        </div>
+    </div>
+
+    <input class="btn btn-success" type="submit" value="Adicionar Item" />
+    {{ form_end(newProdutoForm) }}
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                    <th>Preço Unitário</th>
+                    <th>% Desc.</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for produto in produtos %}
+                    <tr>
+                        <td>{{ produto.codigo }}</td>
+                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.quantidade }}</td>
+                        <td>{{ produto.precoUnitario }}</td>
+                        <td>{{ produto.percentualDesconto }}</td>
+                        <td>{{ produto.total }}</td>
+                        <td>
+                            <ul>
+                                <a class="btn btn-danger" href="deleteItemPedido/{{ produto.id }}">Excluir</a>
+                            </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    <div class="pull-right">
+        <h3>Total: {{ totalPedido }}</h3>
+    </div>
+    <div class="pull-left">
+        <a class="btn btn-info" href="{{ path('pedido_index') }}">Voltar</a>
+    </div>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        $(function() {
+            $( "#vendabundle_itempedido_nomeProduto" ).autocomplete({
+                source:"../../produto/autocomplete",
+                select: function(event, ui) {
+                    event.preventDefault();
+                    $("#vendabundle_itempedido_nomeProduto").val(ui.item.label);
+                },
+                focus: function(event, ui) {
+                    event.preventDefault();
+                    $("#vendabundle_itempedido_produtoId").val(ui.item.id);
+                    $("#vendabundle_itempedido_precoUnitario").val(ui.item.preco);
+                }
+            });
+            $( "#vendabundle_itempedido_quantidade" ).focusout(function(){
+                $("#vendabundle_itempedido_total").val($("#vendabundle_itempedido_quantidade").val() * $("#vendabundle_itempedido_precoUnitario").val());
+            });
+            $( "#vendabundle_itempedido_percentualDesconto" ).focusout(function(){
+                $("#vendabundle_itempedido_total").val($("#vendabundle_itempedido_total").val() - ($("#vendabundle_itempedido_percentualDesconto").val() * $("#vendabundle_itempedido_total").val() / 100));
+            });
+        });
+    </script>
+{% endblock %}

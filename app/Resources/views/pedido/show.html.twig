@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Pedido</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ pedido.id }}</td>
+                </tr>
+                <tr>
+                    <th>Cliente</th>
+                    <td>{{ pedido.nome }}</td>
+                </tr>
+                <tr>
+                    <th>Emissao</th>
+                    <td>{% if pedido.emissao %}{{ pedido.emissao|date('Y-m-d') }}{% endif %}</td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>{{ pedido.total }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <h2>Produtos</h2>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Preço Unitário</th>
+                <th>% Desc.</th>
+                <th>Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.codigo }}</td>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.quantidade }}</td>
+                    <td>{{ produto.precoUnitario }}</td>
+                    <td>{{ produto.percentualDesconto }}</td>
+                    <td>{{ produto.total }}</td>
+                    <td>
+                        <ul>
+                            <a class="btn btn-danger" href="deleteItemPedido/{{ produto.id }}">Excluir</a>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a class="btn btn-info" href="{{ path('pedido_index') }}">Voltar</a>
+    <a class="btn btn-default" href="{{ path('pedido_additem', { 'id': pedido.id }) }}">Adicionar Itens</a>
+
+    {% if  produtos|length is same as(0) %}
+        {{ form_start(delete_form) }}
+            <br><br><input class="btn btn-danger" type="submit" value="Deletar Pedido">
+        {{ form_end(delete_form) }}
+    {% endif %}
+
+{% endblock %}

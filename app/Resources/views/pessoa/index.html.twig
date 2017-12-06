@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger alert-dismissable fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Erro: </strong> {{ message }}
+        </div>
+    {% endfor %}
+
+    <h1>Lista de Pessoas</h1>
+
+    {{ form_start(formPesquisar, {attr : {class: 'form-inline'}}) }}
+        {{ form_widget(formPesquisar.pesquisar, {attr : {'placeholder' : 'Pesquisar'}}) }}
+        {{ form_widget(formPesquisar.pesquisarpor, {attr : {'placeholder' : 'Pesquisar Por'}}) }}
+        <button typw="submit" class="btn btn-default">Pesquisar</button>
+    {{ form_end(formPesquisar) }}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Data de Nascimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for pessoa in pessoas %}
+                <tr>
+                    <td>{{ pessoa.nome }}</td>
+                    <td>{% if pessoa.dataNascimento %}{{ pessoa.dataNascimento|date('d/m/Y') }}{% endif %}</td>
+                    <td>
+                        <ul>
+                            <a class="btn btn-default" href="{{ path('pessoa_show', { 'id': pessoa.id }) }}">Ver</a>
+                            <a class="btn btn-default" href="{{ path('pessoa_edit', { 'id': pessoa.id }) }}">Editar</a>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+        <a class="btn btn-info" href="{{ path('pessoa_new') }}">Cadastrar Pessoa</a>
+
+    </div>
+{% endblock %}

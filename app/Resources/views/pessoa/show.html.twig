@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ pessoa.nome }}</h1>
+
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th>Nome</th>
+                    <td>{{ pessoa.nome }}</td>
+                </tr>
+                <tr>
+                    <th>Datanascimento</th>
+                    <td>{% if pessoa.dataNascimento %}{{ pessoa.dataNascimento|date('d/m/Y') }}{% endif %}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="row">
+        <div class="col-sm-12">
+        <a class="btn btn-default" href="{{ path('pessoa_index') }}">Voltar</a>
+        <a class="btn btn-info" href="{{ path('pessoa_edit', { 'id': pessoa.id }) }}">Editar</a>
+        </div>
+    </div>
+    <br><br><br>
+    <div class="row">
+        <div class="col-sm-12">
+            {{ form_start(delete_form) }}
+                <input class="btn btn-danger" type="submit" value="Excluir">
+            {{ form_end(delete_form) }}
+        </div>
+    </div>
+
+{% endblock %}

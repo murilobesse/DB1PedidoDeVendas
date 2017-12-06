@@ -1,0 +1,3 @@
+venda:
+    resource: '@VendaBundle/Controller/'
+    type: annotation

@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ produto.nome }}</h1>
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <th>Código</th>
+                    <td>{{ produto.codigo }}</td>
+                </tr>
+                <tr>
+                    <th>Nome</th>
+                    <td>{{ produto.nome }}</td>
+                </tr>
+                <tr>
+                    <th>Preço Unitário</th>
+                    <td>{{ produto.precoUnitario }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="">
+        <div class="row">
+            <div class="col-sm-12">
+                <a class="btn btn-default" href="{{ path('produto_index') }}">Voltar</a>
+                <a class="btn btn-info" href="{{ path('produto_edit', { 'id': produto.id }) }}">Editar</a>
+            </div>
+        </div>
+        <br><br><br>
+        <div class="row">
+            <div class="col-sm-12">
+                {{ form_start(delete_form) }}
+                    <input class="btn btn-danger" type="submit" value="Deletar">
+                {{ form_end(delete_form) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

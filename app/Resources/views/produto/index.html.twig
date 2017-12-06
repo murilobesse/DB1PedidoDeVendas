@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Lista de Produtos</h1>
+
+    {{ form_start(formPesquisar, {attr : {class: 'form-inline'}}) }}
+    {{ form_widget(formPesquisar.pesquisar, {attr : {'placeholder' : 'Pesquisar'}}) }}
+        {{ form_widget(formPesquisar.pesquisarpor, {attr : {'placeholder' : 'Pesquisar Por'}}) }}
+        <button typw="submit" class="btn btn-default">Pesquisar</button>
+    {{ form_end(formPesquisar) }}
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Preço Unitário</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for produto in produtos %}
+                <tr>
+                    <td>{{ produto.codigo }}</td>
+                    <td>{{ produto.nome }}</td>
+                    <td>{{ produto.precoUnitario }}</td>
+                    <td>
+                        <ul>
+                            <a class="btn btn-default blue" href="{{ path('produto_show', { 'id': produto.id }) }}">Ver</a>
+                            <a class="btn btn-default" href="{{ path('produto_edit', { 'id': produto.id }) }}">Editar</a>
+                        </ul>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <a class="btn btn-info" href="{{ path('produto_new') }}">Cadastrar um novo produto</a>
+
+{% endblock %}
